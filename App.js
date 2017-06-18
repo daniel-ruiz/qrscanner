@@ -1,70 +1,73 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { AppRegistry, NavigatorIOS, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  NavigatorIOS,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
+//var React = require('react-native');
+// var {
+//   AppRegistry,
+//   StyleSheet,
+//   Text,
+//   View,
+//   TouchableOpacity,
+//   NavigatorIOS,
+// } = React;
 
-import QRCodeScanner from 'react-native-qrcode-scanner';
+import QRCodeScreen from './QRCodeScreen';
 
-class ScanScreen extends Component {
-  onSuccess(e) {
-    Linking.openURL(e.data).catch(err => console.error('An error occured', err));
-  }
-
-  render() {
+var cameraApp = React.createClass({
+  render: function() {
     return (
       <NavigatorIOS
+        style={styles.container}
         initialRoute={{
-          component: QRCodeScanner,
-          title: 'Scan Code',
-          passProps: {
-            onRead: this.onSuccess.bind(this),
-            topContent: (
-              <Text style={styles.centerText}>
-                Go to <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code.
-              </Text>
-            ),
-            bottomContent: (
-              <TouchableOpacity style={styles.buttonTouchable}>
-                <Text style={styles.buttonText}>OK. Got it!</Text>
-              </TouchableOpacity>
-            ),
-          },
+          title: 'Index',
+          backButtonTitle: 'Back',
+          component: Index,
         }}
-        style={{ flex: 1 }}
       />
     );
   }
-}
-
-const styles = StyleSheet.create({
-  centerText: {
-    flex: 1,
-    fontSize: 18,
-    padding: 32,
-    color: '#777',
-  },
-
-  textBold: {
-    fontWeight: '500',
-    color: '#000',
-  },
-
-  buttonText: {
-    fontSize: 21,
-    color: 'rgb(0,122,255)',
-  },
-
-  buttonTouchable: {
-    padding: 16,
-  },
 });
 
-AppRegistry.registerComponent('default', () => ScanScreen);
+var Index = React.createClass({
+
+  render: function() {
+    return (
+      <View style={styles.contentContainer}>
+        <TouchableOpacity onPress={this._onPressQRCode}>
+          <Text>Read QRCode</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  },
+
+  _onPressQRCode: function() {
+    this.props.navigator.push({
+      component: QRCodeScreen,
+      title: 'QRCode',
+      passProps: {
+        onSucess: this._onSucess,
+      },
+    });
+  },
+
+  _onSucess: function(result) {
+    console.log(result);
+  },
+
+});
+
+var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5FCFF',
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+});
+
+AppRegistry.registerComponent('cameraApp', () => cameraApp);
