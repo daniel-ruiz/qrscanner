@@ -1,38 +1,31 @@
 'use strict';
 
-import React, { Component } from 'react';
-import { AppRegistry, NavigatorIOS, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-
-//var React = require('react-native');
-// var {
-//   AppRegistry,
-//   StyleSheet,
-//   Text,
-//   View,
-//   TouchableOpacity,
-//   NavigatorIOS,
-// } = React;
+import React, { Component, PropTypes } from 'react';
+import { NavigatorIOS, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import QRCodeScreen from './QRCodeScreen';
 
-var cameraApp = React.createClass({
-  render: function() {
+export default class CameraApp extends Component {
+  render() {
     return (
       <NavigatorIOS
         style={styles.container}
         initialRoute={{
           title: 'Index',
-          backButtonTitle: 'Back',
           component: Index,
         }}
       />
     );
   }
-});
+}
 
-var Index = React.createClass({
+class Index extends Component {
 
-  render: function() {
+  static propTypes = {
+    navigator: PropTypes.object.isRequired
+  };
+
+  render() {
     return (
       <View style={styles.contentContainer}>
         <TouchableOpacity onPress={this._onPressQRCode}>
@@ -40,25 +33,25 @@ var Index = React.createClass({
         </TouchableOpacity>
       </View>
     );
-  },
+  }
 
-  _onPressQRCode: function() {
+  _onPressQRCode() {
     this.props.navigator.push({
       component: QRCodeScreen,
       title: 'QRCode',
       passProps: {
-        onSucess: this._onSucess,
+        onSucess: this._onSuccess,
       },
     });
-  },
+  }
 
-  _onSucess: function(result) {
+  _onSuccess(result) {
     console.log(result);
-  },
+  }
 
-});
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
@@ -69,5 +62,3 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
   }
 });
-
-AppRegistry.registerComponent('cameraApp', () => cameraApp);

@@ -1,36 +1,27 @@
 'use strict';
 
-//var React = require('react-native');
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, VibrationIOS } from 'react-native';
-
-// var {
-//   StyleSheet,
-//   View,
-//   Text,
-//   TouchableOpacity,
-//   VibrationIOS,
-// } = React;
 
 import Camera from 'react-native-camera';
 
-var QRCodeScreen = React.createClass({
+export default class QRCodeScreen extends  Component{
 
-  propTypes: {
+  static propTypes = {
     cancelButtonVisible: React.PropTypes.bool,
     cancelButtonTitle: React.PropTypes.string,
     onSucess: React.PropTypes.func,
     onCancel: React.PropTypes.func,
-  },
+  };
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       cancelButtonVisible: false,
       cancelButtonTitle: 'Cancel',
     };
-  },
+  }
 
-  _onPressCancel: function() {
+  _onPressCancel() {
     var $this = this;
     requestAnimationFrame(function() {
       $this.props.navigator.pop();
@@ -38,9 +29,9 @@ var QRCodeScreen = React.createClass({
         $this.props.onCancel();
       }
     });
-  },
+  }
 
-  _onBarCodeRead: function(result) {
+  _onBarCodeRead(result) {
     var $this = this;
 
     if (this.barCodeFlag) {
@@ -52,9 +43,9 @@ var QRCodeScreen = React.createClass({
         $this.props.onSucess(result.data);
       }, 1000);
     }
-  },
+  }
 
-  render: function() {
+  render() {
     var cancelButton = null;
     this.barCodeFlag = true;
 
@@ -70,8 +61,8 @@ var QRCodeScreen = React.createClass({
         {cancelButton}
       </Camera>
     );
-  },
-});
+  }
+};
 
 var CancelButton = React.createClass({
   render: function() {
